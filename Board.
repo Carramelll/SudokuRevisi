@@ -2,25 +2,51 @@
 // Perbaikan Sudoku 
 //Board 
 
-#ifndef BOARD_H
-#define BOARD_H
+#include "Board.h"
+#include <iostream>
 
-#include <vector>
+Board::Board() {
+    initialize();
+}
 
-using namespace std;
+void Board::initialize() {
+    // Initialize all cells to 0
+    cells = vector<vector<int>>(9, vector<int>(9, 0));
+}
 
-class Board {
-private:
-    vector<vector<int>> cells;
+bool Board::setValue(int row, int col, int value) {
+    // Check if the cell is empty
+    if (isCellEmpty(row, col)) {
+        // Check if the value is valid (between 1 and 9)
+        if (value >= 1 && value <= 9) {
+            cells[row][col] = value;
+            return true;
+        } else {
+            cout << "Invalid value! Value must be between 1 and 9." << endl;
+            return false;
+        }
+    } else {
+        cout << "Cell is not empty! Cannot change the value." << endl;
+        return false;
+    }
+}
 
-public:
-    Board();
+int Board::getValue(int row, int col) {
+    return cells[row][col];
+}
 
-    void initialize();
-    bool setValue(int row, int col, int value);
-    int getValue(int row, int col);
-    bool isComplete();
-    bool isCellEmpty(int row, int col);
-};
+bool Board::isComplete() {
+    // Check if all cells are filled
+    for (int row = 0; row < 9; ++row) {
+        for (int col = 0; col < 9; ++col) {
+            if (cells[row][col] == 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
-#endif // BOARD_H
+bool Board::isCellEmpty(int row, int col) {
+    return cells[row][col] == 0;
+}
