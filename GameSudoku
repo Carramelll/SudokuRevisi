@@ -1,0 +1,52 @@
+#include "Game.h"
+#include <iostream>
+
+Game::Game() {
+    // Set the path to the difficulty folder
+    manager.setDifficultyPath("Difficulty");
+
+    // Initialize the UI with the game instance
+    ui.setGame(this);
+}
+
+void Game::runGame() {
+    // Display welcome message and menu
+    ui.displayMessage("Welcome to Sudoku!");
+    ui.displayMenu();
+
+    // Game loop
+    bool running = true;
+    while (running) {
+        // Get user input for difficulty
+        std::string difficulty = ui.getDifficultyInput();
+
+        // Load board based on selected difficulty
+        manager.loadBoard(difficulty);
+
+        // Game loop for playing the Sudoku game
+        while (!board.isComplete()) {
+            // Display the Sudoku board
+            ui.displayBoard();
+
+            // Get user input for setting a value
+            int row, col, value;
+            ui.getMoveInput(row, col, value);
+
+            // Set the value on the board
+            board.setValue(row, col, value);
+
+            // Check if the board is complete
+            if (board.isComplete()) {
+                // Display completion message
+                ui.displayMessage("Congratulations! You've completed the Sudoku puzzle!");
+                break;
+            }
+        }
+
+        // Ask if the player wants to play again
+        running = ui.playAgain();
+    }
+
+    // Display goodbye message
+    ui.displayMessage("Thank you for playing Sudoku!");
+}
